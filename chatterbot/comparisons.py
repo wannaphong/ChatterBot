@@ -56,6 +56,22 @@ class LevenshteinDistance(Comparator):
         return percent
 
 
+class Thai2fitSimilarity(Comparator):
+    """
+    Calculate the similarity of two statements using thai2fit models.
+    """
+    def __init__(self):
+        from pythainlp.word_vector import sentence_vectorizer
+        from sklearn.metrics.pairwise import cosine_similarity
+        self.cosine_similarity = cosine_similarity
+        self.cal = sentence_vectorizer
+    def _sentence_similarity(self, sent1, sent2):
+        return self.cosine_similarity(sent1, sent2)
+    def compare(self, statement_a, statement_b):
+        document_a = self.cal(statement_a)
+        document_b = self.cal(statement_b)
+        return self._sentence_similarity(document_a, document_b)
+
 class SpacySimilarity(Comparator):
     """
     Calculate the similarity of two statements using Spacy models.
